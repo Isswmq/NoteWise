@@ -7,9 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.io.IOException;
-
 public class NoteWiseRunner {
-
     public static void main(String[] args) throws TelegramApiException, IOException {
 
         NoteWiseConfig bot = new NoteWiseConfig();

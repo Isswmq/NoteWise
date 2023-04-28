@@ -2,14 +2,17 @@ package org.isswqm.notewise.view;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoteWiseUI {
-    public static SendMessage mainMenu(String chatId){
-        SendMessage message = new SendMessage(chatId, "");
+    public static SendMessage options(String chatID){
+        SendMessage message = new SendMessage(chatID, "Выбери опцию");
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
@@ -31,6 +34,41 @@ public class NoteWiseUI {
 
         markup.setKeyboard(rows);
         message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+    public static SendMessage mainMenu(String chatID){
+        SendMessage message = new SendMessage();
+        message.setChatId(chatID);
+        message.setText("hello");
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setResizeKeyboard(true);
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+
+        KeyboardRow row = new KeyboardRow();
+
+        row.add("Add Note");
+        row.add("View Notes");
+        row.add("Edit Note");
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+
+        row.add("Delete Note");
+        row.add("Search Note");
+        row.add("Reminders");
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+
+        row.add("Categories");
+        row.add("Settings");
+        row.add("Help");
+        keyboardRows.add(row);
+
+        keyboardMarkup.setKeyboard(keyboardRows);
+
+        message.setReplyMarkup(keyboardMarkup);
 
         return message;
     }

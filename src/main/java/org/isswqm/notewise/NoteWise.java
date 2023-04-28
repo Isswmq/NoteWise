@@ -1,5 +1,6 @@
 package org.isswqm.notewise;
 
+import org.isswqm.notewise.handlers.HelpHandler;
 import org.isswqm.notewise.handlers.StickerHandler;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
@@ -8,7 +9,6 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -26,27 +26,38 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasMessage() && update.getMessage().hasText()){
-            String chatId = String.valueOf(update.getMessage().getChatId());
-            SendMessage message = NoteWiseUI.mainMenu(chatId);
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            if(update.hasMessage() && update.getMessage().hasText() && !update.getMessage().getText().isEmpty()){
+                String chatId = String.valueOf(update.getMessage().getChatId());
+                SendMessage options = NoteWiseUI.options(chatId);
+                SendMessage mainMenu = NoteWiseUI.mainMenu(chatId);
 
-            if(update.hasCallbackQuery()){
-                CallbackQuery callbackQuery = update.getCallbackQuery();
-                String data = callbackQuery.getData();
-                if(data.equals("button1")){
-                    try {
-                        SendDocument sendSticker = StickerHandler.sendSadSticker(chatId);
-                        execute(sendSticker);
-                    } catch (TelegramApiException e) {
-                        throw new RuntimeException(e);
+                try {
+                    execute(mainMenu);
+                    execute(options);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+
+                if (update.hasCallbackQuery()) {
+                    CallbackQuery callbackQuery = update.getCallbackQuery();
+                    String data = callbackQuery.getData().toLowerCase();
+                    System.out.println(data);
+                    System.out.println(data.equals("help"));
+                    if (data.equals("help")) {
+                        System.out.println("data equals help");
+                        try {
+                            SendMessage help = HelpHandler.help(chatId);
+                            execute(help);
+                        } catch (TelegramApiException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
