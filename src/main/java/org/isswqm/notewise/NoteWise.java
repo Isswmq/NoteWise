@@ -1,6 +1,5 @@
 package org.isswqm.notewise;
 
-import org.isswqm.notewise.config.Buttons;
 import org.isswqm.notewise.handlers.HelpHandler;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
@@ -12,13 +11,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.util.WebhookUtils;
-
 import java.util.ArrayList;
 
 public class NoteWise extends DefaultAbsSender implements LongPollingBot {
-    protected NoteWise(DefaultBotOptions options, String botToken) {
+    protected NoteWise(DefaultBotOptions options, String botToken){
         super(options, botToken);
     }
+
 
     @Override
     public void onUpdateReceived(Update update) {
