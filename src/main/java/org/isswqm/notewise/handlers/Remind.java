@@ -14,7 +14,6 @@ public class Remind {
     public Remind() throws SQLException {
         connection = DatabaseConnector.getConnection();
     }
-
     public void saveRemind(ReminderConfig reminder) {
         String sql = "INSERT INTO reminder.public.reminders (chat_id, message, data) VALUES (?, ?, ?)";
         try {
