@@ -9,13 +9,12 @@ public class NoteWiseConfig {
     private final String botToken;
 
     public NoteWiseConfig() throws IOException {
-        Properties props = new Properties();
+        Properties properties = new Properties();
         FileInputStream inputStream = new FileInputStream(CONFIG_PATH);
-        props.load(inputStream);
-        this.botToken = props.getProperty("bot_token");
+        properties.load(inputStream);
+        this.botToken = properties.getProperty("bot_token");
         inputStream.close();
     }
-
     public String getBotToken() {
         return this.botToken;
     }

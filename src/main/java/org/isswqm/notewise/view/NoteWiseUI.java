@@ -1,9 +1,7 @@
 package org.isswqm.notewise.view;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -11,34 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteWiseUI {
-    public static SendMessage options(String chatID){
-        SendMessage message = new SendMessage(chatID, "Выбери опцию");
-
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        InlineKeyboardButton button1 = new InlineKeyboardButton();
-
-        button1.setText("send sticker");
-        button1.setCallbackData("button1");
-
-        row.add(button1);
-
-        InlineKeyboardButton button2 = new InlineKeyboardButton();
-        button2.setText("Кнопка 2");
-        button2.setCallbackData("button2");
-        row.add(button2);
-
-        rows.add(row);
-
-        markup.setKeyboard(rows);
-        message.setReplyMarkup(markup);
-
-        return message;
-    }
-
-    public static SendMessage mainMenu(String chatID, ArrayList<String> buttons) {
+    public static SendMessage createButtons(String chatID, ArrayList<String> buttons) {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
         message.setText("Hello! Please select an option:");

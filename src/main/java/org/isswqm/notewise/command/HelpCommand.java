@@ -1,8 +1,8 @@
-package org.isswqm.notewise.handlers;
+package org.isswqm.notewise.command;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-public class HelpHandler {
+public class HelpCommand {
 
     public static SendMessage help(String chatID){
         SendMessage message = new SendMessage();
