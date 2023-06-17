@@ -2,8 +2,8 @@ package org.isswqm.notewise;
 
 import org.isswqm.notewise.command.HelpCommand;
 
-import org.isswqm.notewise.command.RemindCommand;
-import org.isswqm.notewise.config.ReminderConfig;
+import org.isswqm.notewise.config.Statement;
+import org.isswqm.notewise.config.Statements;
 import org.isswqm.notewise.handlers.ReminderHandler;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
@@ -24,35 +24,33 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
         if (update.hasMessage() && update.getMessage().hasText() && !update.getMessage().getText().isEmpty()) {
             ArrayList<String> buttons = new ArrayList<>();
             String chatId = update.getMessage().getChatId().toString();
             String text = update.getMessage().getText();
 
-            System.out.println(text);
-            ReminderHandler reminderHandler = new ReminderHandler();
             try {
-                reminderHandler.remind(chatId, text);
+                Statement.checkStatement(Statement.statement,text,chatId);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
 
             SendMessage mainMenu = NoteWiseUI.createButtons(chatId, buttons);
+            if(Statement.statement.equals(Statements.WAITING)){
+                if(buttons.contains(text)){
+                    try {
+                        checkButton(chatId, text, buttons);
+                    } catch (TelegramApiException | SQLException e) {
+                        throw new RuntimeException(e);
+                    }
 
-            if(buttons.contains(text)){
-                try {
-                    checkButton(chatId, text, buttons);
-                } catch (TelegramApiException | SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
-            }else {
-                try {
-                    execute(mainMenu);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
+                }else {
+                    try {
+                        execute(mainMenu);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
@@ -86,7 +84,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                 message.setText("Кнопка Search Note еще не добавлена");
                 break;
             case "Reminders" :
-                message.setText("Кнопка Reminders еще не добавлена");
+                Statement.statement = Statements.WAITING_ENTERING_TEXT;
+                message.setText("Введите текст заметки");
                 break;
             case "Categories" :
                 message.setText("Кнопка Categories еще не добавлена");
