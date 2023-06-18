@@ -4,11 +4,11 @@ import org.isswqm.notewise.command.HelpCommand;
 
 import org.isswqm.notewise.config.Statement;
 import org.isswqm.notewise.config.Statements;
-import org.isswqm.notewise.handlers.ReminderHandler;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -16,11 +16,14 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     protected NoteWise(DefaultBotOptions options, String botToken){
         super(options, botToken);
     }
+
+    List<Statements> statementsList = List.of(Statements.REMIND_IS_SAVING);
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -51,6 +54,14 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                         e.printStackTrace();
                         throw new RuntimeException(e);
                     }
+                }
+            }
+
+            if(statementsList.contains(Statement.statement)){
+                try {
+                    sendMessage(Statement.statement, chatId);
+                } catch (TelegramApiException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -84,7 +95,7 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                 message.setText("Кнопка Search Note еще не добавлена");
                 break;
             case "Reminders" :
-                Statement.statement = Statements.WAITING_ENTERING_TEXT;
+                Statement.statement = Statements.WAITING_FOR_REMIND_TEXT_INPUT;
                 message.setText("Введите текст заметки");
                 break;
             case "Categories" :
@@ -99,6 +110,18 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         execute(message);
     }
 
+    public void sendMessage(Statements statement, String chatId) throws TelegramApiException {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        switch(statement){
+            case REMIND_IS_SAVING -> message.setText("Заметка сохранена");
+        }
+        if(!message.getText().isEmpty()){
+            Statement.statement = Statements.WAITING;
+            execute(message);
+        }
+    }
+
     @Override
     public String getBotUsername() {
         return "NoteWise_bot";
@@ -106,6 +129,5 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
 
     @Override
     public void clearWebhook() throws TelegramApiRequestException {
-
     }
 }
