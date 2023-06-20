@@ -2,13 +2,12 @@ package org.isswqm.notewise;
 
 import org.isswqm.notewise.command.HelpCommand;
 
-import org.isswqm.notewise.config.Statement;
 import org.isswqm.notewise.config.Statements;
+import org.isswqm.notewise.handlers.ReminderHandler;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -23,45 +22,35 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         super(options, botToken);
     }
 
-    List<Statements> statementsList = List.of(Statements.REMIND_IS_SAVING);
-
+    public static Statements statement = Statements.WAITING;
+    ArrayList<String> buttons = new ArrayList<>();
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText() && !update.getMessage().getText().isEmpty()) {
-            ArrayList<String> buttons = new ArrayList<>();
             String chatId = update.getMessage().getChatId().toString();
             String text = update.getMessage().getText();
 
-            try {
-                Statement.checkStatement(Statement.statement,text,chatId);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            SendMessage mainMenu = NoteWiseUI.createButtons(chatId, buttons);
-            if(Statement.statement.equals(Statements.WAITING)){
+            if(!statement.equals(Statements.WAITING)){
+                try {
+                    checkStatement(text, chatId);
+                } catch (SQLException | TelegramApiException e) {
+                    throw new RuntimeException(e);
+                }
+            }else {
                 if(buttons.contains(text)){
                     try {
                         checkButton(chatId, text, buttons);
                     } catch (TelegramApiException | SQLException e) {
                         throw new RuntimeException(e);
                     }
-
                 }else {
                     try {
+                        SendMessage mainMenu = NoteWiseUI.createButtons(chatId, buttons);
                         execute(mainMenu);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);
                     }
-                }
-            }
-
-            if(statementsList.contains(Statement.statement)){
-                try {
-                    sendMessage(Statement.statement, chatId);
-                } catch (TelegramApiException e) {
-                    throw new RuntimeException(e);
                 }
             }
         }
@@ -95,7 +84,7 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                 message.setText("Кнопка Search Note еще не добавлена");
                 break;
             case "Reminders" :
-                Statement.statement = Statements.WAITING_FOR_REMIND_TEXT_INPUT;
+                statement = Statements.WAITING_FOR_REMIND_TEXT_INPUT;
                 message.setText("Введите текст заметки");
                 break;
             case "Categories" :
@@ -109,17 +98,22 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
 
         execute(message);
     }
-
-    public void sendMessage(Statements statement, String chatId) throws TelegramApiException {
+    public void checkStatement(String text, String chatId) throws SQLException, TelegramApiException {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        switch(statement){
-            case REMIND_IS_SAVING -> message.setText("Заметка сохранена");
+        switch (statement){
+            case WAITING_FOR_REMIND_TEXT_INPUT:
+                ReminderHandler handler = new ReminderHandler();
+                handler.remind(chatId, text);
+                statement = Statements.REMIND_IS_SAVING;
+            case REMIND_IS_SAVING:
+                message.setText("Заметка сохранена");
+                statement = Statements.WAITING;
+                break;
+            default:
+                System.out.println("statement not found");
         }
-        if(!message.getText().isEmpty()){
-            Statement.statement = Statements.WAITING;
-            execute(message);
-        }
+        execute(message);
     }
 
     @Override
