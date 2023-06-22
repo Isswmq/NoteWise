@@ -3,7 +3,7 @@ package org.isswqm.notewise;
 import org.isswqm.notewise.command.HelpCommand;
 
 import org.isswqm.notewise.config.Statements;
-import org.isswqm.notewise.handlers.ReminderHandler;
+import org.isswqm.notewise.helper.ReminderHelper;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -15,14 +15,14 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     protected NoteWise(DefaultBotOptions options, String botToken){
         super(options, botToken);
     }
-
     public static Statements statement = Statements.WAITING;
+
+    ArrayList<String> reminderInfoList = new ArrayList<>();
     ArrayList<String> buttons = new ArrayList<>();
     @Override
     public void onUpdateReceived(Update update) {
@@ -103,11 +103,29 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         message.setChatId(chatId);
         switch (statement){
             case WAITING_FOR_REMIND_TEXT_INPUT:
-                ReminderHandler handler = new ReminderHandler();
-                handler.remind(chatId, text);
-                statement = Statements.REMIND_IS_SAVING;
+                if(reminderInfoList.size() == 0){
+                    reminderInfoList.add(chatId);
+                }
+
+                if (reminderInfoList.size() == 1) {
+                    reminderInfoList.add(text);
+                }
+
+                message.setText("Введите дату и время напоминания. <2001-01-01 16:30>");
+                statement = Statements.WAITING_FOR_REMIND_DATE_INPUT;
+                break;
+            case WAITING_FOR_REMIND_DATE_INPUT:
+                if(reminderInfoList.size() == 2){
+                    reminderInfoList.add(text);
+                    ReminderHelper handler = new ReminderHelper();
+                    handler.remind(reminderInfoList);
+                    statement = Statements.REMIND_IS_SAVING;
+                    checkStatement(text, chatId);
+                }
+                break;
             case REMIND_IS_SAVING:
                 message.setText("Заметка сохранена");
+                reminderInfoList.clear();
                 statement = Statements.WAITING;
                 break;
             default:

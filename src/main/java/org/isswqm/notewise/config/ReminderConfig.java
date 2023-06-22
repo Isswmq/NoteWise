@@ -8,9 +8,10 @@ public class ReminderConfig {
 
     private LocalDateTime datetime;
 
-    public ReminderConfig(Long chatId, String message) {
+    public ReminderConfig(Long chatId, String message, LocalDateTime datetime) {
         this.chatId = chatId;
         this.message = message;
+        this.datetime = datetime;
     }
 
     public Long getChatId() {
@@ -22,6 +23,9 @@ public class ReminderConfig {
     }
 
     public LocalDateTime getDatetime() {
-        return LocalDateTime.now();
+        return datetime;
+    }
+    public void setDatetime(LocalDateTime datetime) {
+        this.datetime = datetime;
     }
 }
