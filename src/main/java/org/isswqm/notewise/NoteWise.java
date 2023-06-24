@@ -3,6 +3,7 @@ package org.isswqm.notewise;
 import org.isswqm.notewise.command.HelpCommand;
 
 import org.isswqm.notewise.config.Statements;
+import org.isswqm.notewise.helper.NoteHelper;
 import org.isswqm.notewise.helper.ReminderHelper;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
@@ -22,7 +23,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     }
     public static Statements statement = Statements.WAITING;
 
-    ArrayList<String> reminderInfoList = new ArrayList<>();
+    public static ArrayList<String> reminderInfoList = new ArrayList<>();
+    ArrayList<String> noteInfoList = new ArrayList<>();
     ArrayList<String> buttons = new ArrayList<>();
     @Override
     public void onUpdateReceived(Update update) {
@@ -69,7 +71,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                 }
                 break;
             case "Add Note" :
-                message.setText("кнопка Add Note еще не добавлена ");
+                statement = Statements.WAITING_FOR_NOTE_TEXT_INPUT;
+                message.setText("Введите текст заметки");
                 break;
             case "View Notes" :
                 message.setText("кнопка View Notes еще не добавлена");
@@ -85,7 +88,7 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                 break;
             case "Reminders" :
                 statement = Statements.WAITING_FOR_REMIND_TEXT_INPUT;
-                message.setText("Введите текст заметки");
+                message.setText("Введите текст напоминания");
                 break;
             case "Categories" :
                 message.setText("Кнопка Categories еще не добавлена");
@@ -103,11 +106,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         message.setChatId(chatId);
         switch (statement){
             case WAITING_FOR_REMIND_TEXT_INPUT:
-                if(reminderInfoList.size() == 0){
+                if(reminderInfoList.isEmpty()){
                     reminderInfoList.add(chatId);
-                }
-
-                if (reminderInfoList.size() == 1) {
                     reminderInfoList.add(text);
                 }
 
@@ -117,15 +117,28 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
             case WAITING_FOR_REMIND_DATE_INPUT:
                 if(reminderInfoList.size() == 2){
                     reminderInfoList.add(text);
-                    ReminderHelper handler = new ReminderHelper();
-                    handler.remind(reminderInfoList);
+                    ReminderHelper helper = new ReminderHelper();
+                    helper.remind(reminderInfoList);
                     statement = Statements.REMIND_IS_SAVING;
                     checkStatement(text, chatId);
                 }
                 break;
             case REMIND_IS_SAVING:
-                message.setText("Заметка сохранена");
+                message.setText("Напоминание сохранено");
                 reminderInfoList.clear();
+                statement = Statements.WAITING;
+                break;
+            case WAITING_FOR_NOTE_TEXT_INPUT:
+                noteInfoList.add(chatId);
+                noteInfoList.add(text);
+                NoteHelper noteHelper = new NoteHelper();
+                noteHelper.note(noteInfoList);
+                statement = Statements.NOTE_IS_SAVING;
+                checkStatement(text, chatId);
+                break;
+            case NOTE_IS_SAVING:
+                message.setText("Заметка сохранена");
+                noteInfoList.clear();
                 statement = Statements.WAITING;
                 break;
             default:

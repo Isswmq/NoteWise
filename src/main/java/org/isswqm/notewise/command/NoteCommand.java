@@ -17,7 +17,7 @@ public class NoteCommand {
     }
 
     public void saveNote(NoteConfig note){
-        String sql = "INSERT INTO notewise_db.public.reminders (chat_id, message, data) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO notewise_db.public.notes (chat_id, message, date) VALUES (?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, note.getChatId());
