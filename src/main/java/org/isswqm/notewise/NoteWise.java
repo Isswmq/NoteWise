@@ -1,10 +1,12 @@
 package org.isswqm.notewise;
 
-import org.isswqm.notewise.command.HelpCommand;
+import org.isswqm.notewise.button.*;
 
 import org.isswqm.notewise.config.Statements;
-import org.isswqm.notewise.helper.NoteHelper;
-import org.isswqm.notewise.helper.ReminderHelper;
+import org.isswqm.notewise.impl.Command;
+import org.isswqm.notewise.impl.RemindIsSaving;
+import org.isswqm.notewise.impl.WaitingForRemindDate;
+import org.isswqm.notewise.impl.WaitingForRemindText;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -16,16 +18,24 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
 
 public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     protected NoteWise(DefaultBotOptions options, String botToken){
         super(options, botToken);
+        setupCommands();
+        setupButtons();
     }
     public static Statements statement = Statements.WAITING;
-
     public static ArrayList<String> reminderInfoList = new ArrayList<>();
-    ArrayList<String> noteInfoList = new ArrayList<>();
+
+    public static ArrayList<String> noteInfoList = new ArrayList<>();
     ArrayList<String> buttons = new ArrayList<>();
+    private HashMap<String, Button> buttonHashMap = new HashMap<>();
+    private HashMap<Statements, Command> commandHashMap = new HashMap<>();
+
+
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText() && !update.getMessage().getText().isEmpty()) {
@@ -39,9 +49,9 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
                     throw new RuntimeException(e);
                 }
             }else {
-                if(buttons.contains(text)){
+                if(buttonHashMap.containsKey(text)){
                     try {
-                        checkButton(chatId, text, buttons);
+                        checkButton(chatId, text);
                     } catch (TelegramApiException | SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -57,94 +67,41 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
             }
         }
     }
-
-    public void checkButton(String chatId, String text, ArrayList<String> buttons) throws TelegramApiException, SQLException {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        switch (text) {
-            case "Help":
-                SendMessage help = HelpCommand.help(chatId);
-                try {
-                    execute(help);
-                } catch (TelegramApiException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
-            case "Add Note" :
-                statement = Statements.WAITING_FOR_NOTE_TEXT_INPUT;
-                message.setText("Введите текст заметки");
-                break;
-            case "View Notes" :
-                message.setText("кнопка View Notes еще не добавлена");
-                break;
-            case "Edit Note" :
-                message.setText("кнопка Edit Note еще не добавлена");
-                break;
-            case "Delete Note" :
-                message.setText("Кнопка Delete Notes еще не добавлена");
-                break;
-            case "Search Note" :
-                message.setText("Кнопка Search Note еще не добавлена");
-                break;
-            case "Reminders" :
-                statement = Statements.WAITING_FOR_REMIND_TEXT_INPUT;
-                message.setText("Введите текст напоминания");
-                break;
-            case "Categories" :
-                message.setText("Кнопка Categories еще не добавлена");
-                break;
-            case "Settings" :
-                message.setText("Кнопка Settings еще не добавлена");
-            default:
-                System.out.println("Кнопка не найдена");
+    public void checkButton(String chatId, String text) throws TelegramApiException, SQLException {
+        try {
+            Button button = Optional.ofNullable(buttonHashMap.get(text))
+                    .orElseThrow(() -> new IllegalStateException("button not found"));
+            execute(button.execute(chatId, text));
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        execute(message);
     }
     public void checkStatement(String text, String chatId) throws SQLException, TelegramApiException {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        switch (statement){
-            case WAITING_FOR_REMIND_TEXT_INPUT:
-                if(reminderInfoList.isEmpty()){
-                    reminderInfoList.add(chatId);
-                    reminderInfoList.add(text);
-                }
-
-                message.setText("Введите дату и время напоминания. <2001-01-01 16:30>");
-                statement = Statements.WAITING_FOR_REMIND_DATE_INPUT;
-                break;
-            case WAITING_FOR_REMIND_DATE_INPUT:
-                if(reminderInfoList.size() == 2){
-                    reminderInfoList.add(text);
-                    ReminderHelper helper = new ReminderHelper();
-                    helper.remind(reminderInfoList);
-                    statement = Statements.REMIND_IS_SAVING;
-                    checkStatement(text, chatId);
-                }
-                break;
-            case REMIND_IS_SAVING:
-                message.setText("Напоминание сохранено");
-                reminderInfoList.clear();
-                statement = Statements.WAITING;
-                break;
-            case WAITING_FOR_NOTE_TEXT_INPUT:
-                noteInfoList.add(chatId);
-                noteInfoList.add(text);
-                NoteHelper noteHelper = new NoteHelper();
-                noteHelper.note(noteInfoList);
-                statement = Statements.NOTE_IS_SAVING;
-                checkStatement(text, chatId);
-                break;
-            case NOTE_IS_SAVING:
-                message.setText("Заметка сохранена");
-                noteInfoList.clear();
-                statement = Statements.WAITING;
-                break;
-            default:
-                System.out.println("statement not found");
+        try {
+            Command command = Optional.ofNullable(commandHashMap.get(statement))
+                    .orElseThrow(() -> new IllegalStateException("statement not found"));
+            execute(command.execute(chatId, text));
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        execute(message);
+    }
+    public void setupButtons(){
+         buttonHashMap.put("Help", new HelpButton());
+         buttonHashMap.put("Add Note", new AddNoteButton());
+         buttonHashMap.put("View Notes", new ViewNoteButton());
+         buttonHashMap.put("Edit Note", new EditNoteButton());
+         buttonHashMap.put("Delete Note", new DeleteNoteButton());
+         buttonHashMap.put("Search Note", new SearchNoteButton());
+         buttonHashMap.put("Reminders", new RemindersButton());
+         buttonHashMap.put("Categories", new CategoriesButton());
+         buttonHashMap.put("Settings", new SettingsButton());
+    }
+
+    public void setupCommands(){
+        commandHashMap.put(Statements.WAITING_FOR_REMIND_TEXT_INPUT, new WaitingForRemindText());
+        commandHashMap.put(Statements.WAITING_FOR_REMIND_DATE_INPUT, new WaitingForRemindDate());
+        commandHashMap.put(Statements.REMIND_IS_SAVING, new RemindIsSaving());
     }
 
     @Override

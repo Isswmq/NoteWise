@@ -9,6 +9,7 @@ public class WaitingForRemindText implements Command{
     @Override
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
+        message.setChatId(chatId);
         if(NoteWise.reminderInfoList.isEmpty()){
             NoteWise.reminderInfoList.add(chatId);
             NoteWise.reminderInfoList.add(text);
