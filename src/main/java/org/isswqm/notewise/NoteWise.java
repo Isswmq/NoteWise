@@ -9,6 +9,7 @@ import org.isswqm.notewise.impl.addnote.WaitingForNoteText;
 import org.isswqm.notewise.impl.remind.RemindIsSaving;
 import org.isswqm.notewise.impl.remind.WaitingForRemindDate;
 import org.isswqm.notewise.impl.remind.WaitingForRemindText;
+import org.isswqm.notewise.impl.viewnotes.ViewNoteCommand;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class NoteWise extends DefaultAbsSender implements LongPollingBot {
-    protected NoteWise(DefaultBotOptions options, String botToken){
+    protected NoteWise(DefaultBotOptions options, String botToken) throws SQLException {
         super(options, botToken);
         setupCommands();
         setupButtons();
@@ -100,12 +101,13 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
          buttonHashMap.put("Settings", new SettingsButton());
     }
 
-    public void setupCommands(){
+    public void setupCommands() throws SQLException {
         commandHashMap.put(Statements.WAITING_FOR_REMIND_TEXT_INPUT, new WaitingForRemindText());
         commandHashMap.put(Statements.WAITING_FOR_REMIND_DATE_INPUT, new WaitingForRemindDate());
         commandHashMap.put(Statements.REMIND_IS_SAVING, new RemindIsSaving());
         commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteText());
         commandHashMap.put(Statements.NOTE_IS_SAVING, new NoteIsSaving());
+        commandHashMap.put(Statements.WAITING_FOR_NOTES_VIEW, new ViewNoteCommand());
     }
 
     @Override
