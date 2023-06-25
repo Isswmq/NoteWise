@@ -1,13 +1,14 @@
-package org.isswqm.notewise.impl;
+package org.isswqm.notewise.impl.remind;
 
 import org.isswqm.notewise.NoteWise;
 import org.isswqm.notewise.config.Statements;
 import org.isswqm.notewise.helper.ReminderHelper;
+import org.isswqm.notewise.impl.Command;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.SQLException;
 
-public class RemindIsSaving implements Command{
+public class RemindIsSaving implements Command {
     @Override
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();

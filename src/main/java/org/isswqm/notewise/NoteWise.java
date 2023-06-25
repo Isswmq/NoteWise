@@ -4,9 +4,11 @@ import org.isswqm.notewise.button.*;
 
 import org.isswqm.notewise.config.Statements;
 import org.isswqm.notewise.impl.Command;
-import org.isswqm.notewise.impl.RemindIsSaving;
-import org.isswqm.notewise.impl.WaitingForRemindDate;
-import org.isswqm.notewise.impl.WaitingForRemindText;
+import org.isswqm.notewise.impl.addnote.NoteIsSaving;
+import org.isswqm.notewise.impl.addnote.WaitingForNoteText;
+import org.isswqm.notewise.impl.remind.RemindIsSaving;
+import org.isswqm.notewise.impl.remind.WaitingForRemindDate;
+import org.isswqm.notewise.impl.remind.WaitingForRemindText;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -102,6 +104,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         commandHashMap.put(Statements.WAITING_FOR_REMIND_TEXT_INPUT, new WaitingForRemindText());
         commandHashMap.put(Statements.WAITING_FOR_REMIND_DATE_INPUT, new WaitingForRemindDate());
         commandHashMap.put(Statements.REMIND_IS_SAVING, new RemindIsSaving());
+        commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteText());
+        commandHashMap.put(Statements.NOTE_IS_SAVING, new NoteIsSaving());
     }
 
     @Override

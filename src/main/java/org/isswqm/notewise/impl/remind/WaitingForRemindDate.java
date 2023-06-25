@@ -1,9 +1,10 @@
-package org.isswqm.notewise.impl;
+package org.isswqm.notewise.impl.remind;
 
 import org.isswqm.notewise.NoteWise;
 import org.isswqm.notewise.config.Statements;
+import org.isswqm.notewise.impl.Command;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-public class WaitingForRemindDate implements Command{
+public class WaitingForRemindDate implements Command {
     @Override
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
