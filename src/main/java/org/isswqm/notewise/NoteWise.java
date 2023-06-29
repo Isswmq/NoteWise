@@ -6,6 +6,8 @@ import org.isswqm.notewise.config.Statements;
 import org.isswqm.notewise.impl.Command;
 import org.isswqm.notewise.impl.addnote.NoteIsSaving;
 import org.isswqm.notewise.impl.addnote.WaitingForNoteText;
+import org.isswqm.notewise.impl.deletenote.NoteIsDeleted;
+import org.isswqm.notewise.impl.deletenote.WaitingForDeleteNote;
 import org.isswqm.notewise.impl.remind.RemindIsSaving;
 import org.isswqm.notewise.impl.remind.WaitingForRemindDate;
 import org.isswqm.notewise.impl.remind.WaitingForRemindText;
@@ -32,11 +34,12 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     }
     public static Statements statement = Statements.WAITING;
     public static ArrayList<String> reminderInfoList = new ArrayList<>();
-
     public static ArrayList<String> noteInfoList = new ArrayList<>();
+
+    public static ArrayList<String> deleteNoteList = new ArrayList<>();
     ArrayList<String> buttons = new ArrayList<>();
-    private HashMap<String, Button> buttonHashMap = new HashMap<>();
-    private HashMap<Statements, Command> commandHashMap = new HashMap<>();
+    private final HashMap<String, Button> buttonHashMap = new HashMap<>();
+    private final HashMap<Statements, Command> commandHashMap = new HashMap<>();
 
 
     @Override
@@ -108,6 +111,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteText());
         commandHashMap.put(Statements.NOTE_IS_SAVING, new NoteIsSaving());
         commandHashMap.put(Statements.WAITING_FOR_NOTES_VIEW, new ViewNoteCommand());
+        commandHashMap.put(Statements.WAITING_FOR_DELETE_NOTE, new WaitingForDeleteNote());
+        commandHashMap.put(Statements.NOTE_IS_DELETED, new NoteIsDeleted());
     }
 
     @Override

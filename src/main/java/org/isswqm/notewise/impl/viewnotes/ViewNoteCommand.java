@@ -34,7 +34,7 @@ public class ViewNoteCommand implements Command {
                 while (resultSet.next()) {
                     String messageText = resultSet.getString(1);
                     String year = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getYear());
-                    String month = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getMonth().getValue());
+                    String month = "0" + String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getMonth().getValue());
                     String day = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getDayOfMonth());
                     String hours = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getHour());
                     String minutes = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getMinute());
@@ -59,6 +59,14 @@ public class ViewNoteCommand implements Command {
             }
         }
 
-        return new SendMessage(chatId, builder.toString());
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+
+        if(builder.isEmpty()){
+            message.setText("Заметки не найдены");
+        }else {
+            message.setText(builder.toString());
+        }
+        return message;
     }
 }
