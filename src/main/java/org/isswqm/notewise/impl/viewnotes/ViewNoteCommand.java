@@ -20,9 +20,10 @@ public class ViewNoteCommand implements Command {
     public ViewNoteCommand() throws SQLException {
         connection = DatabaseConnector.getConnection();
     }
-
     @Override
     public SendMessage execute(String chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
         NoteWise.statement = Statements.WAITING;
         LinkedHashMap<String, List<String>> messagesMap = new LinkedHashMap<>();
         if (text.equalsIgnoreCase("да")) {
@@ -49,18 +50,17 @@ public class ViewNoteCommand implements Command {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            message.setText("Показ заметок отменен");
         }
 
         StringBuilder builder = new StringBuilder();
         if (messagesMap.containsKey(chatId)) {
-            for (String message : messagesMap.get(chatId)) {
-                builder.append(message);
+            for (String messageFromMessageMap : messagesMap.get(chatId)) {
+                builder.append(messageFromMessageMap);
                 builder.append("\n");
             }
         }
-
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
 
         if(builder.isEmpty()){
             message.setText("Заметки не найдены");
