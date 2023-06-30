@@ -1,0 +1,23 @@
+package org.isswqm.notewise.impl.editnote;
+
+import org.isswqm.notewise.NoteWise;
+import org.isswqm.notewise.config.DatabaseConnector;
+import org.isswqm.notewise.config.Statements;
+import org.isswqm.notewise.impl.Command;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class WaitingForEditingDateInput implements Command {
+    @Override
+    public SendMessage execute(String chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        NoteWise.editNoteList.add(text);
+        message.setText("Введите новый текст заметки");
+        NoteWise.statement = Statements.WAITING_FOR_EDITING_NOTE_TEXT_INPUT;
+        return message;
+    }
+}
