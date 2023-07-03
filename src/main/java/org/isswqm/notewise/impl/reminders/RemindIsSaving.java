@@ -1,4 +1,4 @@
-package org.isswqm.notewise.impl.remind;
+package org.isswqm.notewise.impl.reminders;
 
 import org.isswqm.notewise.NoteWise;
 import org.isswqm.notewise.config.Statements;

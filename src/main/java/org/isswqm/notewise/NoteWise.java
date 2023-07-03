@@ -11,9 +11,11 @@ import org.isswqm.notewise.impl.deletenote.WaitingForDeleteNote;
 import org.isswqm.notewise.impl.editnote.NoteIsEdited;
 import org.isswqm.notewise.impl.editnote.WaitingForEditingDateInput;
 import org.isswqm.notewise.impl.editnote.WaitingForEditingTextInput;
-import org.isswqm.notewise.impl.remind.RemindIsSaving;
-import org.isswqm.notewise.impl.remind.WaitingForRemindDate;
-import org.isswqm.notewise.impl.remind.WaitingForRemindText;
+import org.isswqm.notewise.impl.reminders.RemindIsSaving;
+import org.isswqm.notewise.impl.reminders.WaitingForRemindDate;
+import org.isswqm.notewise.impl.reminders.WaitingForRemindText;
+import org.isswqm.notewise.impl.searchnote.NoteFound;
+import org.isswqm.notewise.impl.searchnote.WaitingForSearchNoteDateInput;
 import org.isswqm.notewise.impl.viewnotes.ViewNoteCommand;
 import org.isswqm.notewise.view.NoteWiseUI;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
@@ -40,6 +42,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     public static ArrayList<String> noteInfoList = new ArrayList<>();
     public static ArrayList<String> deleteNoteList = new ArrayList<>();
     public static ArrayList<String> editNoteList = new ArrayList<>();
+
+    public static ArrayList<String> searchNoteList = new ArrayList<>();
     ArrayList<String> buttons = new ArrayList<>();
     private final HashMap<String, Button> buttonHashMap = new HashMap<>();
     private final HashMap<Statements, Command> commandHashMap = new HashMap<>();
@@ -119,6 +123,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         commandHashMap.put(Statements.WAITING_FOR_EDITING_NOTE_DATE_INPUT, new WaitingForEditingDateInput());
         commandHashMap.put(Statements.WAITING_FOR_EDITING_NOTE_TEXT_INPUT, new WaitingForEditingTextInput());
         commandHashMap.put(Statements.NOTE_IS_EDITED, new NoteIsEdited());
+        commandHashMap.put(Statements.WAITING_FOR_SEARCH_NOTE_DATE_INPUT, new WaitingForSearchNoteDateInput());
+        commandHashMap.put(Statements.NoteFound, new NoteFound());
     }
 
     @Override

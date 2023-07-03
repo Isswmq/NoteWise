@@ -21,10 +21,11 @@ public class NoteIsEdited implements Command {
         if(text.equalsIgnoreCase("да")){
             try {
                 Connection connection = DatabaseConnector.getConnection();
-                String sql = "UPDATE notes SET message = ? WHERE to_char(date, 'YYYY-MM-DD') = ?";
+                String sql = "UPDATE notewise_db.public.notes SET message = ? WHERE to_char(date, 'YYYY-MM-DD') = ? AND chat_id = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setString(1, noteText);
                 statement.setString(2, noteDate);
+                statement.setString(3, chatId);
                 statement.executeUpdate();
                 message.setText("заметка изменена");
             }catch (SQLException e){
