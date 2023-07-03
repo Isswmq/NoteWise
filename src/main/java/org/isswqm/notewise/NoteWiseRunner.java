@@ -1,5 +1,6 @@
 package org.isswqm.notewise;
 
+import org.isswqm.notewise.command.Remind;
 import org.isswqm.notewise.config.NoteWiseConfig;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -16,7 +17,10 @@ public class NoteWiseRunner {
         String botToken = bot.getBotToken();
 
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-
         telegramBotsApi.registerBot(new NoteWise(new DefaultBotOptions(), botToken));
+
+        Remind remind = new Remind(new NoteWise(new DefaultBotOptions(), botToken));
+        Thread thread = new Thread(remind);
+        thread.start();
     }
 }

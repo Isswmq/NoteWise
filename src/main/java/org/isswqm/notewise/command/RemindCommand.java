@@ -15,7 +15,7 @@ public class RemindCommand {
         connection = DatabaseConnector.getConnection();
     }
     public void saveRemind(ReminderConfig reminder) {
-        String sql = "INSERT INTO notewise_db.public.reminders (chat_id, message, date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO notewise_db.public.reminders (chat_id, message, reminder_date) VALUES (?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, reminder.getChatId());

@@ -2,6 +2,7 @@ package org.isswqm.notewise;
 
 import org.isswqm.notewise.button.*;
 
+import org.isswqm.notewise.command.Remind;
 import org.isswqm.notewise.config.Statements;
 import org.isswqm.notewise.impl.Command;
 import org.isswqm.notewise.impl.addnote.NoteIsSaving;
@@ -42,7 +43,6 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     public static ArrayList<String> noteInfoList = new ArrayList<>();
     public static ArrayList<String> deleteNoteList = new ArrayList<>();
     public static ArrayList<String> editNoteList = new ArrayList<>();
-
     public static ArrayList<String> searchNoteList = new ArrayList<>();
     ArrayList<String> buttons = new ArrayList<>();
     private final HashMap<String, Button> buttonHashMap = new HashMap<>();
@@ -100,15 +100,15 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         }
     }
     public void setupButtons(){
-         buttonHashMap.put("Help", new HelpButton());
-         buttonHashMap.put("Add Note", new AddNoteButton());
-         buttonHashMap.put("View Notes", new ViewNoteButton());
-         buttonHashMap.put("Edit Note", new EditNoteButton());
-         buttonHashMap.put("Delete Note", new DeleteNoteButton());
-         buttonHashMap.put("Search Note", new SearchNoteButton());
-         buttonHashMap.put("Reminders", new RemindersButton());
-         buttonHashMap.put("Categories", new CategoriesButton());
-         buttonHashMap.put("Settings", new SettingsButton());
+         buttonHashMap.put("Помощь", new HelpButton());
+         buttonHashMap.put("Добавить Заметку", new AddNoteButton());
+         buttonHashMap.put("Просмотреть Заметки", new ViewNoteButton());
+         buttonHashMap.put("Изменить Заметку", new EditNoteButton());
+         buttonHashMap.put("Удалить Заметку", new DeleteNoteButton());
+         buttonHashMap.put("Найти Заметки", new SearchNoteButton());
+         buttonHashMap.put("Добавить Напоминание", new RemindersButton());
+         //buttonHashMap.put("Просмотреть Напоминания", new CategoriesButton());
+         //buttonHashMap.put("Удалить Напоминание", new SettingsButton());
     }
 
     public void setupCommands() throws SQLException {

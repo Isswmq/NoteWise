@@ -12,7 +12,7 @@ public class NoteWiseUI {
     public static SendMessage createButtons(String chatID, ArrayList<String> buttons) {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
-        message.setText("Hello! Please select an option:");
+        message.setText("Выберите функцию:");
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setResizeKeyboard(true);
@@ -21,21 +21,21 @@ public class NoteWiseUI {
 
         KeyboardRow row = new KeyboardRow();
 
-        row.add("Add Note");
-        row.add("View Notes");
-        row.add("Edit Note");
+        row.add("Добавить Заметку");
+        row.add("Просмотреть Заметки");
+        row.add("Изменить Заметку");
         keyboardRows.add(row);
 
         row = new KeyboardRow();
-        row.add("Delete Note");
-        row.add("Search Note");
-        row.add("Reminders");
+        row.add("Удалить Заметку");
+        row.add("Найти Заметки");
+        row.add("Добавить Напоминание");
         keyboardRows.add(row);
 
         row = new KeyboardRow();
-        row.add("Categories");
-        row.add("Settings");
-        row.add("Help");
+        //row.add("Categories");
+        //row.add("Settings");
+        row.add("Помощь");
         keyboardRows.add(row);
 
         keyboardMarkup.setKeyboard(keyboardRows);
