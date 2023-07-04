@@ -23,7 +23,6 @@ public class Remind implements Runnable, Command {
         connection = DatabaseConnector.getConnection();
         this.bot = bot;
     }
-
     @Override
     public void run() {
         while(!Thread.interrupted()){
@@ -31,8 +30,6 @@ public class Remind implements Runnable, Command {
                 LocalDateTime now = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 String date = now.format(formatter);
-                System.out.println(date);
-
                 String sql = "SELECT chat_id, message, reminder_date FROM notewise_db.public.reminders WHERE to_char(reminder_date, 'yyyy-MM-dd HH24:MI') = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setString(1, date);
@@ -44,17 +41,12 @@ public class Remind implements Runnable, Command {
                 try{
                     Thread.sleep(10_000);
                 }catch (InterruptedException e){
-                    e.printStackTrace();
                     Thread.currentThread().interrupt();
                 }
-            }catch (SQLException e){
+            }catch (SQLException  | TelegramApiException e){
                 e.printStackTrace();
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
             }
-
         }
-
     }
 
     @Override

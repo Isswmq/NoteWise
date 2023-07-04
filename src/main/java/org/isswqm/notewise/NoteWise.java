@@ -2,9 +2,9 @@ package org.isswqm.notewise;
 
 import org.isswqm.notewise.button.*;
 
-import org.isswqm.notewise.command.Remind;
 import org.isswqm.notewise.config.Statements;
 import org.isswqm.notewise.impl.Command;
+import org.isswqm.notewise.impl.viewremind.ViewRemindCommand;
 import org.isswqm.notewise.impl.addnote.NoteIsSaving;
 import org.isswqm.notewise.impl.addnote.WaitingForNoteText;
 import org.isswqm.notewise.impl.deletenote.NoteIsDeleted;
@@ -107,13 +107,13 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
          buttonHashMap.put("Удалить Заметку", new DeleteNoteButton());
          buttonHashMap.put("Найти Заметки", new SearchNoteButton());
          buttonHashMap.put("Добавить Напоминание", new RemindersButton());
-         //buttonHashMap.put("Просмотреть Напоминания", new CategoriesButton());
-         //buttonHashMap.put("Удалить Напоминание", new SettingsButton());
+         buttonHashMap.put("Просмотреть Напоминания", new ViewRemindButton());
+         buttonHashMap.put("Удалить Напоминание", new DeleteRemindButton());
     }
 
     public void setupCommands() throws SQLException {
-        commandHashMap.put(Statements.WAITING_FOR_REMIND_TEXT_INPUT, new WaitingForRemindText());
-        commandHashMap.put(Statements.WAITING_FOR_REMIND_DATE_INPUT, new WaitingForRemindDate());
+        commandHashMap.put(Statements.WAITING_FOR_ADD_REMIND_TEXT_INPUT, new WaitingForRemindText());
+        commandHashMap.put(Statements.WAITING_FOR_ADD_REMIND_DATE_INPUT, new WaitingForRemindDate());
         commandHashMap.put(Statements.REMIND_IS_SAVING, new RemindIsSaving());
         commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteText());
         commandHashMap.put(Statements.NOTE_IS_SAVING, new NoteIsSaving());
@@ -125,6 +125,7 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         commandHashMap.put(Statements.NOTE_IS_EDITED, new NoteIsEdited());
         commandHashMap.put(Statements.WAITING_FOR_SEARCH_NOTE_DATE_INPUT, new WaitingForSearchNoteDateInput());
         commandHashMap.put(Statements.NoteFound, new NoteFound());
+        commandHashMap.put(Statements.WAITING_FOR_VIEW_REMIND, new ViewRemindCommand());
     }
 
     @Override

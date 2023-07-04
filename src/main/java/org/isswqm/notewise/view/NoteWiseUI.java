@@ -33,8 +33,8 @@ public class NoteWiseUI {
         keyboardRows.add(row);
 
         row = new KeyboardRow();
-        //row.add("Categories");
-        //row.add("Settings");
+        row.add("Просмотреть Напоминания");
+        row.add("Удалить Напоминание");
         row.add("Помощь");
         keyboardRows.add(row);
 
