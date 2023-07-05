@@ -26,9 +26,9 @@ public class ViewNoteCommand implements Command {
         message.setChatId(chatId);
         NoteWise.statement = Statements.WAITING;
         LinkedHashMap<String, List<String>> messagesMap = new LinkedHashMap<>();
-        if (text.equalsIgnoreCase("да")) {
+        if (text.equalsIgnoreCase("yes")) {
             try {
-                String sql = "SELECT message, date from notewise_db.public.notes WHERE chat_id = ?";
+                String sql = "SELECT message, note_date from notewise_db.public.notes WHERE chat_id = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setLong(1, Long.parseLong(chatId));
                 ResultSet resultSet = statement.executeQuery();
@@ -51,7 +51,7 @@ public class ViewNoteCommand implements Command {
                 e.printStackTrace();
             }
         }else {
-            message.setText("Показ заметок отменен");
+            message.setText("Displaying notes canceled.");
         }
 
         StringBuilder builder = new StringBuilder();
@@ -63,7 +63,7 @@ public class ViewNoteCommand implements Command {
         }
 
         if(builder.isEmpty()){
-            message.setText("Заметки не найдены");
+            message.setText("No notes found.");
         }else {
             message.setText(builder.toString());
         }

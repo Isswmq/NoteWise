@@ -8,6 +8,6 @@ public class SearchNoteButton implements Button{
     @Override
     public SendMessage execute(String chatId, String text) {
         NoteWise.statement = Statements.WAITING_FOR_SEARCH_NOTE_DATE_INPUT;
-        return new SendMessage(chatId, "Введите дату заметки для просмотра. <2001-01-01>");
+        return new SendMessage(chatId, "Enter the date of the note for viewing. <2001-01-01>");
     }
 }

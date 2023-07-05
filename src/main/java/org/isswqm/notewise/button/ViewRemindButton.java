@@ -8,6 +8,6 @@ public class ViewRemindButton implements Button{
     @Override
     public SendMessage execute(String chatId, String text) {
         NoteWise.statement = Statements.WAITING_FOR_VIEW_REMIND;
-        return new SendMessage(chatId, "Хотите просмотреть напоминания? <да/нет>");
+        return new SendMessage(chatId, "Would you like to view the reminders? <yes/no>");
     }
 }

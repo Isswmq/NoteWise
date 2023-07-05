@@ -1,22 +1,43 @@
 package org.isswqm.notewise.impl.addnote;
 
 import org.isswqm.notewise.NoteWise;
+import org.isswqm.notewise.config.DatabaseConnector;
 import org.isswqm.notewise.config.Statements;
-import org.isswqm.notewise.helper.NoteHelper;
 import org.isswqm.notewise.impl.Command;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 public class NoteIsSaving implements Command {
+
+    private final Connection connection;
+
+    public NoteIsSaving() throws SQLException {
+        connection = DatabaseConnector.getConnection();
+    }
+
     @Override
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        if(text.equalsIgnoreCase("да")){
-            NoteHelper helper = new NoteHelper();
-            helper.note(NoteWise.noteInfoList);
-            message.setText("Заметка сохранена!");
+        if(text.equalsIgnoreCase("yes")){
+            String sql = "INSERT INTO notewise_db.public.notes (chat_id, message, note_date) VALUES (?, ?, ?)";
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setLong(1, Long.parseLong(NoteWise.noteInfoList.get(0)));
+                statement.setString(2, NoteWise.noteInfoList.get(1));
+                statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+                statement.executeUpdate();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+            message.setText("Note saved!");
         }else {
-            message.setText("Добавление заметки отменено.");
+            message.setText("Adding note canceled.");
         }
         NoteWise.statement = Statements.WAITING;
         return message;

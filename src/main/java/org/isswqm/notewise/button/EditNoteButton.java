@@ -8,6 +8,6 @@ public class EditNoteButton implements Button{
     @Override
     public SendMessage execute(String chatId, String text) {
         NoteWise.statement = Statements.WAITING_FOR_EDITING_NOTE_DATE_INPUT;
-        return new SendMessage(chatId, "Введите дату заметки для изменения, <2001-01-01>");
+        return new SendMessage(chatId, "Enter the date of the note for modification, <2001-01-01>");
     }
 }

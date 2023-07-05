@@ -10,8 +10,8 @@ public class WaitingForDeleteNote implements Command {
     @Override
     public SendMessage execute(String chatId, String text) {
         NoteWise.deleteNoteList.add(text);
-        SendMessage message = new SendMessage(chatId, "удалить заметку? <да/нет>");
-        NoteWise.statement = Statements.NOTE_IS_DELETED;
+        SendMessage message = new SendMessage(chatId, "Delete the note? <yes/no>");
+        NoteWise.statement = Statements.NOTE_DELETED;
         return message;
     }
 }

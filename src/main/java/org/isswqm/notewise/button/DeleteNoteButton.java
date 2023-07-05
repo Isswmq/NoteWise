@@ -8,7 +8,7 @@ public class DeleteNoteButton implements Button{
 
     @Override
     public SendMessage execute(String chatId, String text) {
-        SendMessage message = new SendMessage(chatId, "Введите дату заметки для удаления, <2001-01-01>");
+        SendMessage message = new SendMessage(chatId, "Enter the date of the note for deletion, <2001-01-01>");
         NoteWise.statement = Statements.WAITING_FOR_DELETE_NOTE;
         return message;
     }

@@ -11,8 +11,8 @@ public class WaitingForRemindDate implements Command {
         message.setChatId(chatId);
         NoteWise.reminderInfoList.add(text);
 
-        message.setText("сохранить напоминание? <да/нет>");
-        NoteWise.statement = Statements.REMIND_IS_SAVING;
+        message.setText("Save the reminder? <yes/no>");
+        NoteWise.statement = Statements.REMIND_SAVING;
         return message;
     }
 }

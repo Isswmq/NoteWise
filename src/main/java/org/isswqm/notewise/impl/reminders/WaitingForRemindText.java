@@ -16,7 +16,7 @@ public class WaitingForRemindText implements Command {
             NoteWise.reminderInfoList.add(text);
         }
 
-        message.setText("Введите дату и время напоминания. <2001-01-01 16:30>");
+        message.setText("Enter the date and time of the reminder. <2001-01-01 16:30>");
         NoteWise.statement = Statements.WAITING_FOR_ADD_REMIND_DATE_INPUT;
         return message;
     }

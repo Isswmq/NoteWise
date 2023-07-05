@@ -1,11 +1,10 @@
-package org.isswqm.notewise.command;
+package org.isswqm.notewise.impl.reminders;
 
 import org.isswqm.notewise.config.DatabaseConnector;
 import org.isswqm.notewise.impl.Command;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.TelegramBot;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,12 +13,12 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Remind implements Runnable, Command {
+public class RemindChecker implements Runnable, Command {
 
     private final Connection connection;
     private final AbsSender bot;
 
-    public Remind(AbsSender bot) throws SQLException {
+    public RemindChecker(AbsSender bot) throws SQLException {
         connection = DatabaseConnector.getConnection();
         this.bot = bot;
     }
@@ -35,7 +34,8 @@ public class Remind implements Runnable, Command {
                 statement.setString(1, date);
                 ResultSet resultSet = statement.executeQuery();
                 if(resultSet.next()){
-                    bot.execute(execute(String.valueOf(resultSet.getLong(1)), "Напоминание!!! " + resultSet.getString(2)));
+                    bot.execute(execute(String.valueOf(resultSet.getLong(1)), "Reminder! +" +
+                            "Text: " + resultSet.getString(2)));
                     Thread.currentThread().interrupt();
                 }
                 try{

@@ -17,19 +17,19 @@ public class RemindDeleted implements Command {
         String date = NoteWise.deleteRemindList.get(0);
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        if(text.equalsIgnoreCase("да")){
+        if(text.equalsIgnoreCase("yes")){
             try {
                 Connection connection = DatabaseConnector.getConnection();
-                String sql = "DELETE FROM reminders WHERE to_char(reminder_date, 'YYYY-MM-DD') = ?";
+                String sql = "DELETE FROM notewise_db.public.reminders WHERE to_char(reminder_date, 'yyyy-MM-dd HH24:MI') = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setString(1, date);
                 statement.executeUpdate();
-                message.setText("Напоминание удалено");
+                message.setText("Reminder deleted.");
             }catch (SQLException e){
                 e.printStackTrace();
             }
         }else {
-            message.setText("Удаление отменено");
+            message.setText("Deletion canceled.");
         }
 
         NoteWise.statement = Statements.WAITING;

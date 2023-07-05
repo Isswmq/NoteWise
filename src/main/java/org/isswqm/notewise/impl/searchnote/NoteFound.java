@@ -22,11 +22,11 @@ public class NoteFound implements Command {
     public SendMessage execute(String chatId, String text){
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("что-то пошло не так");
+        message.setText("Something went wrong.");
         StringBuilder builder = new StringBuilder();
-        if(text.equalsIgnoreCase("да")){
+        if(text.equalsIgnoreCase("yes")){
             try{
-                String sql = "SELECT message FROM notewise_db.public.notes WHERE chat_id = ? AND to_char(date, 'YYYY-MM-DD') = ?";
+                String sql = "SELECT message FROM notewise_db.public.notes WHERE chat_id = ? AND to_char(note_date, 'YYYY-MM-DD') = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setLong(1, (Long.parseLong(chatId)));
                 statement.setString(2, NoteWise.searchNoteList.get(0));
@@ -41,7 +41,7 @@ public class NoteFound implements Command {
                 e.printStackTrace();
             }
         }else {
-            message.setText("Просмотр заметки отменен");
+            message.setText("Viewing of the note canceled.");
         }
 
         if(!builder.isEmpty()){

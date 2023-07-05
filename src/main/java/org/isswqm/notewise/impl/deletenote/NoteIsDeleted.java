@@ -17,19 +17,19 @@ public class NoteIsDeleted implements Command {
         String date = NoteWise.deleteNoteList.get(0);
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        if(text.equalsIgnoreCase("да")){
+        if(text.equalsIgnoreCase("yes")){
             try {
                 Connection connection = DatabaseConnector.getConnection();
-                String sql = "DELETE FROM notes WHERE to_char(date, 'YYYY-MM-DD') = ?";
+                String sql = "DELETE FROM notes WHERE to_char(note_date, 'YYYY-MM-DD') = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setString(1, date);
                 statement.executeUpdate();
-                message.setText("заметка удалена");
+                message.setText("Note deleted.");
             }catch (SQLException e){
                 e.printStackTrace();
             }
         }else {
-            message.setText("Удаление отменено");
+            message.setText("Deletion canceled");
         }
 
         NoteWise.statement = Statements.WAITING;

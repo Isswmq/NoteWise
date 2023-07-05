@@ -8,7 +8,7 @@ import org.isswqm.notewise.impl.deleteremind.RemindDeleted;
 import org.isswqm.notewise.impl.deleteremind.WaitingForDeleteRemind;
 import org.isswqm.notewise.impl.viewremind.ViewRemindCommand;
 import org.isswqm.notewise.impl.addnote.NoteIsSaving;
-import org.isswqm.notewise.impl.addnote.WaitingForNoteText;
+import org.isswqm.notewise.impl.addnote.WaitingForNoteTextInput;
 import org.isswqm.notewise.impl.deletenote.NoteIsDeleted;
 import org.isswqm.notewise.impl.deletenote.WaitingForDeleteNote;
 import org.isswqm.notewise.impl.editnote.NoteIsEdited;
@@ -40,6 +40,7 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         setupCommands();
         setupButtons();
     }
+
     public static Statements statement = Statements.WAITING;
     public static ArrayList<String> reminderInfoList = new ArrayList<>();
     public static ArrayList<String> noteInfoList = new ArrayList<>();
@@ -47,10 +48,9 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     public static ArrayList<String> editNoteList = new ArrayList<>();
     public static ArrayList<String> searchNoteList = new ArrayList<>();
     public static ArrayList<String> deleteRemindList = new ArrayList<>();
-    ArrayList<String> buttons = new ArrayList<>();
+    private final ArrayList<String> buttons = new ArrayList<>();
     private final HashMap<String, Button> buttonHashMap = new HashMap<>();
     private final HashMap<Statements, Command> commandHashMap = new HashMap<>();
-
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -93,6 +93,8 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         }
 
     }
+
+
     public void checkStatement(String text, String chatId) throws SQLException, TelegramApiException {
         try {
             Command command = Optional.ofNullable(commandHashMap.get(statement))
@@ -103,34 +105,34 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
         }
     }
     public void setupButtons(){
-         buttonHashMap.put("Помощь", new HelpButton());
-         buttonHashMap.put("Добавить Заметку", new AddNoteButton());
-         buttonHashMap.put("Просмотреть Заметки", new ViewNoteButton());
-         buttonHashMap.put("Изменить Заметку", new EditNoteButton());
-         buttonHashMap.put("Удалить Заметку", new DeleteNoteButton());
-         buttonHashMap.put("Найти Заметки", new SearchNoteButton());
-         buttonHashMap.put("Добавить Напоминание", new RemindersButton());
-         buttonHashMap.put("Просмотреть Напоминания", new ViewRemindButton());
-         buttonHashMap.put("Удалить Напоминание", new DeleteRemindButton());
+         buttonHashMap.put("Help", new HelpButton());
+         buttonHashMap.put("Add Note", new AddNoteButton());
+         buttonHashMap.put("View Notes", new ViewNoteButton());
+         buttonHashMap.put("Edit Note", new EditNoteButton());
+         buttonHashMap.put("Delete Note", new DeleteNoteButton());
+         buttonHashMap.put("Find Notes", new SearchNoteButton());
+         buttonHashMap.put("Add Reminder", new RemindersButton());
+         buttonHashMap.put("View Reminders", new ViewRemindButton());
+         buttonHashMap.put("Delete Reminder", new DeleteRemindButton());
     }
 
     public void setupCommands() throws SQLException {
         commandHashMap.put(Statements.WAITING_FOR_ADD_REMIND_TEXT_INPUT, new WaitingForRemindText());
         commandHashMap.put(Statements.WAITING_FOR_ADD_REMIND_DATE_INPUT, new WaitingForRemindDate());
-        commandHashMap.put(Statements.REMIND_IS_SAVING, new RemindIsSaving());
-        commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteText());
-        commandHashMap.put(Statements.NOTE_IS_SAVING, new NoteIsSaving());
-        commandHashMap.put(Statements.WAITING_FOR_NOTES_VIEW, new ViewNoteCommand());
+        commandHashMap.put(Statements.REMIND_SAVING, new RemindIsSaving());
+        commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteTextInput());
+        commandHashMap.put(Statements.NOTE_SAVING, new NoteIsSaving());
+        commandHashMap.put(Statements.WAITING_FOR_VIEW_NOTES, new ViewNoteCommand());
         commandHashMap.put(Statements.WAITING_FOR_DELETE_NOTE, new WaitingForDeleteNote());
-        commandHashMap.put(Statements.NOTE_IS_DELETED, new NoteIsDeleted());
+        commandHashMap.put(Statements.NOTE_DELETED, new NoteIsDeleted());
         commandHashMap.put(Statements.WAITING_FOR_EDITING_NOTE_DATE_INPUT, new WaitingForEditingDateInput());
         commandHashMap.put(Statements.WAITING_FOR_EDITING_NOTE_TEXT_INPUT, new WaitingForEditingTextInput());
-        commandHashMap.put(Statements.NOTE_IS_EDITED, new NoteIsEdited());
+        commandHashMap.put(Statements.NOTE_EDITED, new NoteIsEdited());
         commandHashMap.put(Statements.WAITING_FOR_SEARCH_NOTE_DATE_INPUT, new WaitingForSearchNoteDateInput());
-        commandHashMap.put(Statements.NoteFound, new NoteFound());
+        commandHashMap.put(Statements.NOTE_FOUND, new NoteFound());
         commandHashMap.put(Statements.WAITING_FOR_VIEW_REMIND, new ViewRemindCommand());
         commandHashMap.put(Statements.WAITING_FOR_DELETE_REMIND, new WaitingForDeleteRemind());
-        commandHashMap.put(Statements.REMIND_IS_DELETED, new RemindDeleted());
+        commandHashMap.put(Statements.REMIND_DELETED, new RemindDeleted());
     }
 
     @Override

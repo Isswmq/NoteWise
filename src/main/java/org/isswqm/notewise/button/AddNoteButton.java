@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 public class AddNoteButton implements Button{
     @Override
     public SendMessage execute(String chatId, String text) {
-        SendMessage message = new SendMessage(chatId, "Введите текст заметки");
+        SendMessage message = new SendMessage(chatId, "Enter the text of the note");
         NoteWise.statement = Statements.WAITING_FOR_NOTE_TEXT_INPUT;
         return message;
     }

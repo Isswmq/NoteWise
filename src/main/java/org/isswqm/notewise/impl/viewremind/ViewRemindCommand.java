@@ -28,7 +28,7 @@ public class ViewRemindCommand implements Command {
         message.setChatId(chatId);
         NoteWise.statement = Statements.WAITING;
         LinkedHashMap<String, List<String>> messagesMap = new LinkedHashMap<>();
-        if (text.equalsIgnoreCase("да")) {
+        if (text.equalsIgnoreCase("yes")) {
             try {
                 String sql = "SELECT message, reminder_date from notewise_db.public.reminders WHERE chat_id = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -52,7 +52,7 @@ public class ViewRemindCommand implements Command {
                 e.printStackTrace();
             }
         }else {
-            message.setText("Просмотр напоминаний отменен");
+            message.setText("Viewing reminders canceled.");
         }
 
         StringBuilder builder = new StringBuilder();
@@ -64,7 +64,7 @@ public class ViewRemindCommand implements Command {
         }
 
         if(builder.isEmpty()){
-            message.setText("Напоминания не найдены");
+            message.setText("Reminders not found.");
         }else {
             message.setText(builder.toString());
         }

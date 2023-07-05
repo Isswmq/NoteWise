@@ -12,8 +12,8 @@ public class WaitingForEditingTextInput implements Command {
         NoteWise.editNoteList.add(text);
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Хотите изменить заметку? <да/нет>");
-        NoteWise.statement = Statements.NOTE_IS_EDITED;
+        message.setText("Would you like to modify the note? <yes/no>");
+        NoteWise.statement = Statements.NOTE_EDITED;
         return message;
     }
 }
