@@ -17,8 +17,8 @@ public class NoteIsEdited implements Command {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText("Something went wrong");
-        String noteDate = NoteWise.editNoteList.get(0);
-        String noteText = NoteWise.editNoteList.get(1);
+        String noteDate = NoteWise.editNoteMap.get("Date");
+        String noteText = NoteWise.editNoteMap.get("Text");
         if(text.equalsIgnoreCase("yes")){
             try {
                 Connection connection = DatabaseConnector.getConnection();

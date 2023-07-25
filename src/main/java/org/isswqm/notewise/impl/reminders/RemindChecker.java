@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class RemindChecker implements Runnable, Command {
-
     private final Connection connection;
     private final AbsSender bot;
 
@@ -34,7 +33,7 @@ public class RemindChecker implements Runnable, Command {
                 statement.setString(1, date);
                 ResultSet resultSet = statement.executeQuery();
                 if(resultSet.next()){
-                    bot.execute(execute(String.valueOf(resultSet.getLong(1)), "Reminder! +" +
+                    bot.execute(execute(String.valueOf(resultSet.getLong(1)), "Reminder! " + "\n" +
                             "Text: " + resultSet.getString(2)));
                     Thread.currentThread().interrupt();
                 }

@@ -29,14 +29,14 @@ public class NoteFound implements Command {
                 String sql = "SELECT message FROM notewise_db.public.notes WHERE chat_id = ? AND to_char(note_date, 'YYYY-MM-DD') = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setLong(1, (Long.parseLong(chatId)));
-                statement.setString(2, NoteWise.searchNoteList.get(0));
+                statement.setString(2, NoteWise.searchNoteMap.get("Text"));
                 ResultSet resultSet = statement.executeQuery();
                 int counter = 1;
                 while(resultSet.next()){
                     builder.append("message: ").append(resultSet.getString(counter));
                     counter++;
                 }
-                NoteWise.searchNoteList.clear();
+                NoteWise.searchNoteMap.clear();
             }catch (SQLException e){
                 e.printStackTrace();
             }

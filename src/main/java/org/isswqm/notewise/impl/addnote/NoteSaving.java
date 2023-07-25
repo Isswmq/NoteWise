@@ -1,4 +1,4 @@
-package org.isswqm.notewise.impl.reminders;
+package org.isswqm.notewise.impl.addnote;
 
 import org.isswqm.notewise.NoteWise;
 import org.isswqm.notewise.config.DatabaseConnector;
@@ -11,13 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-public class RemindIsSaving implements Command {
+public class NoteSaving implements Command {
 
     private final Connection connection;
 
-    public RemindIsSaving() throws SQLException {
+    public NoteSaving() throws SQLException {
         connection = DatabaseConnector.getConnection();
     }
 
@@ -26,25 +25,22 @@ public class RemindIsSaving implements Command {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         if(text.equalsIgnoreCase("yes")){
+            String sql = "INSERT INTO notewise_db.public.notes (chat_id, message, note_date) VALUES (?, ?, ?)";
             try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                LocalDateTime date = LocalDateTime.parse(NoteWise.reminderInfoList.get(2), formatter);
-                String sql = "INSERT INTO notewise_db.public.reminders (chat_id, message, reminder_date) VALUES (?, ?, ?)";
                 PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setLong(1, Long.parseLong(NoteWise.reminderInfoList.get(0)));
-                statement.setString(2, NoteWise.reminderInfoList.get(1));
-                statement.setTimestamp(3, Timestamp.valueOf(date));
+                statement.setLong(1, Long.parseLong(NoteWise.noteInfoMap.get("ChatId")));
+                statement.setString(2, NoteWise.noteInfoMap.get("Text"));
+                statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
                 statement.executeUpdate();
             }catch (SQLException e){
                 e.printStackTrace();
             }
-            message.setText("Reminder saved.");
+            message.setText("Note saved!");
         }else {
-            message.setText("Save canceled.");
+            message.setText("Adding note canceled.");
         }
-
-        NoteWise.reminderInfoList.clear();
         NoteWise.statement = Statements.WAITING;
         return message;
     }
 }
+

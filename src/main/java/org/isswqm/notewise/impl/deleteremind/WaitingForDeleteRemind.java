@@ -9,8 +9,8 @@ public class WaitingForDeleteRemind implements Command {
 
     @Override
     public SendMessage execute(String chatId, String text) {
-        NoteWise.deleteRemindList.add(text);
-        SendMessage message = new SendMessage(chatId, "Delete the note? <yes/no>");
+        NoteWise.deleteRemindMap.put("Date", text);
+        SendMessage message = new SendMessage(chatId, "Delete the remind? <yes/no>");
         NoteWise.statement = Statements.REMIND_DELETED;
         return message;
     }

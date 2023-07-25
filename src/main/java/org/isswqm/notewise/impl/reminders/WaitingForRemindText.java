@@ -11,9 +11,9 @@ public class WaitingForRemindText implements Command {
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        if(NoteWise.reminderInfoList.isEmpty()){
-            NoteWise.reminderInfoList.add(chatId);
-            NoteWise.reminderInfoList.add(text);
+        if(NoteWise.reminderInfoMap.isEmpty()){
+            NoteWise.reminderInfoMap.put("ChatId", chatId);
+            NoteWise.reminderInfoMap.put("Text", text);
         }
 
         message.setText("Enter the date and time of the reminder. <2001-01-01 16:30>");

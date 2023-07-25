@@ -7,14 +7,13 @@ import org.isswqm.notewise.impl.Command;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class NoteIsDeleted implements Command {
     @Override
     public SendMessage execute(String chatId, String text)  {
-        String date = NoteWise.deleteNoteList.get(0);
+        String date = NoteWise.deleteNoteMap.get("Text");
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         if(text.equalsIgnoreCase("yes")){

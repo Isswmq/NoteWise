@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class ViewNoteCommand implements Command {
@@ -35,7 +34,7 @@ public class ViewNoteCommand implements Command {
                 while (resultSet.next()) {
                     String messageText = resultSet.getString(1);
                     String year = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getYear());
-                    String month = "0" + String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getMonth().getValue());
+                    String month = "0" + (resultSet.getTimestamp(2).toLocalDateTime().getMonth().getValue());
                     String day = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getDayOfMonth());
                     String hours = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getHour());
                     String minutes = String.valueOf(resultSet.getTimestamp(2).toLocalDateTime().getMinute());

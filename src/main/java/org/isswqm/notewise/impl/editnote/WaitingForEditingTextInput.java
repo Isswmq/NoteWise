@@ -9,7 +9,7 @@ public class WaitingForEditingTextInput implements Command {
 
     @Override
     public SendMessage execute(String chatId, String text) {
-        NoteWise.editNoteList.add(text);
+        NoteWise.editNoteMap.put("Text", text);
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText("Would you like to modify the note? <yes/no>");

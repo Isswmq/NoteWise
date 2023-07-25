@@ -9,7 +9,7 @@ public class WaitingForRemindDate implements Command {
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        NoteWise.reminderInfoList.add(text);
+        NoteWise.reminderInfoMap.put("Date", text);
 
         message.setText("Save the reminder? <yes/no>");
         NoteWise.statement = Statements.REMIND_SAVING;

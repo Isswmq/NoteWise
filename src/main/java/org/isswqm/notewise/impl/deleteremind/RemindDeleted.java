@@ -14,7 +14,7 @@ public class RemindDeleted implements Command {
 
     @Override
     public SendMessage execute(String chatId, String text)  {
-        String date = NoteWise.deleteRemindList.get(0);
+        String date = NoteWise.deleteRemindMap.get("Date");
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         if(text.equalsIgnoreCase("yes")){

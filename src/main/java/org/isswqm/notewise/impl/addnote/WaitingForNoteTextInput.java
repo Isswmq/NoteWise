@@ -10,8 +10,8 @@ public class WaitingForNoteTextInput implements Command {
     @Override
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage(chatId, "Save the note <yes/no>");
-        NoteWise.noteInfoList.add(chatId);
-        NoteWise.noteInfoList.add(text);
+        NoteWise.noteInfoMap.put("ChatId", chatId);
+        NoteWise.noteInfoMap.put("Text", text);
         NoteWise.statement = Statements.NOTE_SAVING;
         return message;
     }

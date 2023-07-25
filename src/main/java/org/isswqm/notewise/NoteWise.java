@@ -7,14 +7,14 @@ import org.isswqm.notewise.impl.Command;
 import org.isswqm.notewise.impl.deleteremind.RemindDeleted;
 import org.isswqm.notewise.impl.deleteremind.WaitingForDeleteRemind;
 import org.isswqm.notewise.impl.viewremind.ViewRemindCommand;
-import org.isswqm.notewise.impl.addnote.NoteIsSaving;
+import org.isswqm.notewise.impl.addnote.NoteSaving;
 import org.isswqm.notewise.impl.addnote.WaitingForNoteTextInput;
 import org.isswqm.notewise.impl.deletenote.NoteIsDeleted;
 import org.isswqm.notewise.impl.deletenote.WaitingForDeleteNote;
 import org.isswqm.notewise.impl.editnote.NoteIsEdited;
 import org.isswqm.notewise.impl.editnote.WaitingForEditingDateInput;
 import org.isswqm.notewise.impl.editnote.WaitingForEditingTextInput;
-import org.isswqm.notewise.impl.reminders.RemindIsSaving;
+import org.isswqm.notewise.impl.reminders.RemindSaving;
 import org.isswqm.notewise.impl.reminders.WaitingForRemindDate;
 import org.isswqm.notewise.impl.reminders.WaitingForRemindText;
 import org.isswqm.notewise.impl.searchnote.NoteFound;
@@ -37,17 +37,17 @@ import java.util.Optional;
 public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     protected NoteWise(DefaultBotOptions options, String botToken) throws SQLException {
         super(options, botToken);
-        setupCommands();
         setupButtons();
+        setupCommands();
     }
 
     public static Statements statement = Statements.WAITING;
-    public static ArrayList<String> reminderInfoList = new ArrayList<>();
-    public static ArrayList<String> noteInfoList = new ArrayList<>();
-    public static ArrayList<String> deleteNoteList = new ArrayList<>();
-    public static ArrayList<String> editNoteList = new ArrayList<>();
-    public static ArrayList<String> searchNoteList = new ArrayList<>();
-    public static ArrayList<String> deleteRemindList = new ArrayList<>();
+    public static HashMap<String, String> reminderInfoMap = new HashMap<>();
+    public static HashMap<String, String> noteInfoMap = new HashMap<>();
+    public static HashMap<String, String> deleteNoteMap = new HashMap<>();
+    public static HashMap<String, String> editNoteMap = new HashMap<>();
+    public static HashMap<String, String> searchNoteMap = new HashMap<>();
+    public static HashMap<String, String> deleteRemindMap = new HashMap<>();
     private final ArrayList<String> buttons = new ArrayList<>();
     private final HashMap<String, Button> buttonHashMap = new HashMap<>();
     private final HashMap<Statements, Command> commandHashMap = new HashMap<>();
@@ -119,9 +119,9 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     public void setupCommands() throws SQLException {
         commandHashMap.put(Statements.WAITING_FOR_ADD_REMIND_TEXT_INPUT, new WaitingForRemindText());
         commandHashMap.put(Statements.WAITING_FOR_ADD_REMIND_DATE_INPUT, new WaitingForRemindDate());
-        commandHashMap.put(Statements.REMIND_SAVING, new RemindIsSaving());
+        commandHashMap.put(Statements.REMIND_SAVING, new RemindSaving());
         commandHashMap.put(Statements.WAITING_FOR_NOTE_TEXT_INPUT, new WaitingForNoteTextInput());
-        commandHashMap.put(Statements.NOTE_SAVING, new NoteIsSaving());
+        commandHashMap.put(Statements.NOTE_SAVING, new NoteSaving());
         commandHashMap.put(Statements.WAITING_FOR_VIEW_NOTES, new ViewNoteCommand());
         commandHashMap.put(Statements.WAITING_FOR_DELETE_NOTE, new WaitingForDeleteNote());
         commandHashMap.put(Statements.NOTE_DELETED, new NoteIsDeleted());

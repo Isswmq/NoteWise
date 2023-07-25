@@ -15,7 +15,7 @@ public class WaitingForEditingDateInput implements Command {
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        NoteWise.editNoteList.add(text);
+        NoteWise.editNoteMap.put("Date", text);
         message.setText("Enter the new text of the note");
         NoteWise.statement = Statements.WAITING_FOR_EDITING_NOTE_TEXT_INPUT;
         return message;

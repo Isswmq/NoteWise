@@ -8,6 +8,6 @@ public class DeleteRemindButton implements Button{
     @Override
     public SendMessage execute(String chatId, String text) {
         NoteWise.statement = Statements.WAITING_FOR_DELETE_REMIND;
-        return new SendMessage(chatId, "Enter the date of the reminder for deletion, <2001-01-01>");
+        return new SendMessage(chatId, "Enter the date of the reminder for deletion, <2001-01-01 13:37>");
     }
 }
