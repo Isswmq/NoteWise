@@ -30,6 +30,10 @@ public class RemindDeleted implements Command {
             }
         }else {
             message.setText("Deletion canceled.");
+            if (!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
 
         NoteWise.statement = Statements.WAITING;

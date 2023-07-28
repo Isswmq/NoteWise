@@ -51,6 +51,10 @@ public class ViewNoteCommand implements Command {
             }
         }else {
             message.setText("Displaying notes canceled.");
+            if (!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
 
         StringBuilder builder = new StringBuilder();
@@ -66,6 +70,7 @@ public class ViewNoteCommand implements Command {
         }else {
             message.setText(builder.toString());
         }
+
         return message;
     }
 }

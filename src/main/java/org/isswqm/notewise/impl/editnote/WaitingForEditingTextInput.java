@@ -9,11 +9,15 @@ public class WaitingForEditingTextInput implements Command {
 
     @Override
     public SendMessage execute(String chatId, String text) {
-        NoteWise.editNoteMap.put("Text", text);
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Would you like to modify the note? <yes/no>");
-        NoteWise.statement = Statements.NOTE_EDITED;
+        if (!NoteWise.checkButtonPressAndSetStatement(text)){
+            message.setText("Please select the function again");
+        } else {
+            NoteWise.editNoteMap.put("Text", text);
+            message.setText("Would you like to modify the note? <yes>");
+            NoteWise.statement = Statements.NOTE_EDITED;
+        }
         return message;
     }
 }

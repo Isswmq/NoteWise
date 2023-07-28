@@ -16,7 +16,12 @@ public class NoteIsEdited implements Command {
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Something went wrong");
+        if (NoteWise.buttonHashMap.containsKey(text)){
+            NoteWise.statement = Statements.WAITING;
+            message.setText("Please select the function again");
+            return message;
+        }
+
         String noteDate = NoteWise.editNoteMap.get("Date");
         String noteText = NoteWise.editNoteMap.get("Text");
         if(text.equalsIgnoreCase("yes")){
@@ -34,8 +39,11 @@ public class NoteIsEdited implements Command {
             }
         }else {
             message.setText("Cancellation of deletion");
+            if (!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
-
         NoteWise.statement = Statements.WAITING;
         return message;
     }

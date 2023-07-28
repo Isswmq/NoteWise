@@ -37,7 +37,12 @@ public class NoteSaving implements Command {
             }
             message.setText("Note saved!");
         }else {
+
             message.setText("Adding note canceled.");
+            if (!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
         NoteWise.statement = Statements.WAITING;
         return message;

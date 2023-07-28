@@ -11,13 +11,14 @@ public class WaitingForRemindText implements Command {
     public SendMessage execute(String chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        if(NoteWise.reminderInfoMap.isEmpty()){
+        if (!NoteWise.checkButtonPressAndSetStatement(text)){
+            message.setText("Please select the function again");
+        } else {
             NoteWise.reminderInfoMap.put("ChatId", chatId);
             NoteWise.reminderInfoMap.put("Text", text);
+            message.setText("Enter the date and time of the reminder. <2001-01-01 16:30>");
+            NoteWise.statement = Statements.WAITING_FOR_ADD_REMIND_DATE_INPUT;
         }
-
-        message.setText("Enter the date and time of the reminder. <2001-01-01 16:30>");
-        NoteWise.statement = Statements.WAITING_FOR_ADD_REMIND_DATE_INPUT;
         return message;
     }
 }

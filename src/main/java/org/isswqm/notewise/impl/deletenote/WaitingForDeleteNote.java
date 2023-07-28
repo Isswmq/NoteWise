@@ -9,9 +9,15 @@ public class WaitingForDeleteNote implements Command {
 
     @Override
     public SendMessage execute(String chatId, String text) {
-        NoteWise.deleteNoteMap.put("Text", text);
-        SendMessage message = new SendMessage(chatId, "Delete the note? <yes/no>");
-        NoteWise.statement = Statements.NOTE_DELETED;
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        if (!NoteWise.checkButtonPressAndSetStatement(text)){
+            message.setText("Please select the function again");
+        } else {
+            NoteWise.deleteNoteMap.put("Text", text);
+            NoteWise.statement = Statements.NOTE_DELETED;
+            message.setText("Delete the note? <yes>");
+        }
         return message;
     }
 }

@@ -9,8 +9,15 @@ public class WaitingForSearchNoteDateInput implements Command {
 
     @Override
     public SendMessage execute(String chatId, String text) {
-        NoteWise.searchNoteMap.put("Text", text);
-        NoteWise.statement = Statements.NOTE_FOUND;
-        return new SendMessage(chatId, "Would you like to view the notes? <yes/no>");
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        if (!NoteWise.checkButtonPressAndSetStatement(text)){
+            message.setText("Please select the function again");
+        }else {
+            NoteWise.searchNoteMap.put("Text", text);
+            NoteWise.statement = Statements.NOTE_FOUND;
+            message.setText("Would you like to view the notes? <yes/no>");
+        }
+        return message;
     }
 }

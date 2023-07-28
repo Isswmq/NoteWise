@@ -42,6 +42,10 @@ public class NoteFound implements Command {
             }
         }else {
             message.setText("Viewing of the note canceled.");
+            if (!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
 
         if(!builder.isEmpty()){

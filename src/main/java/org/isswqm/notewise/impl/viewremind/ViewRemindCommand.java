@@ -53,6 +53,10 @@ public class ViewRemindCommand implements Command {
             }
         }else {
             message.setText("Viewing reminders canceled.");
+            if(!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
 
         StringBuilder builder = new StringBuilder();

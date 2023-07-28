@@ -41,6 +41,10 @@ public class RemindSaving implements Command {
             message.setText("Reminder saved.");
         }else {
             message.setText("Save canceled.");
+            if (!NoteWise.checkButtonPressAndSetStatement(text)){
+                message.setText("Please select the function again");
+            }
+            return message;
         }
 
         NoteWise.reminderInfoMap.clear();

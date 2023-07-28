@@ -49,7 +49,7 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
     public static HashMap<String, String> searchNoteMap = new HashMap<>();
     public static HashMap<String, String> deleteRemindMap = new HashMap<>();
     private final ArrayList<String> buttons = new ArrayList<>();
-    private final HashMap<String, Button> buttonHashMap = new HashMap<>();
+    public static final HashMap<String, Button> buttonHashMap = new HashMap<>();
     private final HashMap<Statements, Command> commandHashMap = new HashMap<>();
 
     @Override
@@ -104,6 +104,15 @@ public class NoteWise extends DefaultAbsSender implements LongPollingBot {
             e.printStackTrace();
         }
     }
+
+    public static boolean checkButtonPressAndSetStatement(String text){
+        if (NoteWise.buttonHashMap.containsKey(text)){
+            NoteWise.statement = Statements.WAITING;
+            return false;
+        }
+        return true;
+    }
+
     public void setupButtons(){
          buttonHashMap.put("Help", new HelpButton());
          buttonHashMap.put("Add Note", new AddNoteButton());
